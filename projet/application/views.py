@@ -1,12 +1,12 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from . models import Projects
 from . serializers import ProjectSerializer
 
 
-class ProjectAPIView(APIView):
-    def get(self, *args, **kwargs):
-        projects = Projects.objects.all()
-        serialize = ProjectSerializer(projects, many=True)
-        return Response(serialize.data)
+class ProjectViewSet(ModelViewSet):
+    
+    serializer_class = ProjectSerializer
+    
+    def get_queryset(self, *args, **kwargs):
+        return Projects.objects.all()
