@@ -1,4 +1,3 @@
-from xml.etree.ElementTree import Comment
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from . models import Issue, Project, Comment

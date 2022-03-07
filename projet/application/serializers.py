@@ -7,7 +7,7 @@ class ProjectSerializer(ModelSerializer):
     
     class Meta:
         model = Project
-        fields = ['__all__']
+        fields = ['id', 'titel', 'description', 'type', 'author_user_id', 'create_time']
 
 class ContibutorSerializer(ModelSerializer):
     permission = ChoiceField()
