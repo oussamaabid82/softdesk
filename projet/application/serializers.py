@@ -1,29 +1,28 @@
-from django.forms import ChoiceField
 from rest_framework.serializers import ModelSerializer
 from .models import Project, Contributor, Issue, Comment
 
 
-class ProjectSerializer(ModelSerializer):
-    
-    class Meta:
-        model = Project
-        fields = ['id', 'titel', 'description', 'type', 'author_user_id', 'create_time']
 
 class ContibutorSerializer(ModelSerializer):
-    permission = ChoiceField()
     
     class Meta:
         model = Contributor 
-        field = ['__all__']
-
-class IssueSerializer(ModelSerializer):
-    
-    class Meta:
-        model = Issue
-        field = ['__all__']
+        fields = ['author_user', 'project','permission', 'role']
 
 class CommentSerializer(ModelSerializer):
     
     class Meta:
         model = Comment
-        field = ['__all__']
+        fields = ['id', 'description', 'author_user', 'issue', 'create_time']
+
+class IssueSerializer(ModelSerializer):
+    comments = CommentSerializer(many=True)
+    class Meta:
+        model = Issue
+        fields = ['id', 'titel', 'description', 'create_time', 'comments']    
+
+class ProjectSerializer(ModelSerializer):
+    issues = IssueSerializer(many=True)
+    class Meta:
+        model = Project
+        fields = ['id', 'titel', 'description', 'type', 'author_user', 'create_time', 'issues']

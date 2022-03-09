@@ -6,6 +6,7 @@ from . serializers import ProjectSerializer, IssueSerializer, CommentSerializer
 
 class ProjectViewSet(ReadOnlyModelViewSet):
     serializer_class = ProjectSerializer
+    
     def get_queryset(self):
         return Project.objects.all()
 
