@@ -15,8 +15,6 @@ class UserSerializer(ModelSerializer):
     def validate_password(self, value: str) -> str:
         return make_password(value)
 
-    # check there is no symbol inside fields :
-    # email, first_name, last_name
     def validate(self, data):
         symbols_list = ('/\'\\=:;?!*+$£µ%')
 
@@ -36,4 +34,6 @@ class UserListSerializer(ModelSerializer):
             'password',
             'first_name', 
             'last_name', 
-            'email'] 
+            'email'
+            ]
+ 

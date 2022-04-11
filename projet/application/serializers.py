@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, ValidationError
 
 from .models import Project, Contributor, Issue, Comment
-
+from authentication.serializers import UserSerializer
 
 class IssueListSerializer(ModelSerializer):
     

@@ -10,12 +10,9 @@ from . serializers import (
     )
 from .permissions import IsAdminAuthenticated 
 
-"""
-Mixin : Display detail of object
-Ex : projects/{id}/
-""" 
-class MultipleSerializerMixin:
 
+class MultipleSerializerMixin:
+# créer une liaison dans l'url en utilisant le "id" entre project, issue et comment 
     detail_serializer_class = None
 
     def get_serializer_class(self):
@@ -30,20 +27,22 @@ class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
     # permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        # Display all project if logged user is contributor
+        queryset = Project.objects.all()
+        # Afficher les projets que l'utilisateur connécter est designé comme contributor 
         return Project.objects.filter(contributors=self.request.user)
     
     def perform_create(self, serializer):
-        # Save project with the current logged user
+        # lier l'utilsateur connecter au projet créer
         project = serializer.save(author_user=self.request.user)
         
+        # Créer contributor en mettant l'utilisateur connecter comme auth_user
         Contributor.objects.create(
             auth_user=self.request.user,
             project=project,
             permissions='AUTHOR',
             role=''
         )
-        
+
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return self.detail_serializer_class
@@ -56,7 +55,7 @@ class ContributorViewset(ModelViewSet):
     permission_classes = [IsAdminAuthenticated]
 
     def get_queryset(self):
-        # Check if logged user is contributor
+        # Vérifier si l'utilisateur est contributor ou non
         try:
             contributor_exist = Contributor.objects.get(
                 Q(project=self.kwargs['project_pk']) & Q(author_user=self.request.user)
@@ -68,9 +67,8 @@ class ContributorViewset(ModelViewSet):
             print('Aucun résultat.')
 
     def perform_create(self, serializer):
-        # get project object projects/{id}/
+        #  Recupérer le 'id' du projet puis lier ce projet à contributor
         project = get_object_or_404(Project, id=self.kwargs['project_pk'])
-        # save contributor information with the current projects/{id}/
         serializer.save(project=project)
     
     
@@ -83,17 +81,21 @@ class IssueViewSet(ModelViewSet):
         return Issue.objects.filter(project_id=self.kwargs['project_pk'])
     
     def perform_create(self, serializer):
+        # Recupérer le 'id' du projet
+        project = get_object_or_404(Project, id=self.kwargs['project_pk'])
+        
+        # lorsque l'utillisateur connécter céer un issue il en est automatiquement auther_user et assignee  
         serializer.save(
             project=Project.objects.get(pk=self.kwargs['project_pk']), 
             author_user=self.request.user,
             assignee_user=self.request.user
             )
-       
+
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return self.detail_serializer_class
         return super().get_serializer_class()
-        
+
 
 class CommentViewSet(ModelViewSet):
     permission_classes = [IsAdminAuthenticated]
@@ -104,4 +106,11 @@ class CommentViewSet(ModelViewSet):
         return Comment.objects.filter(issue_id=self.kwargs['issue_pk'])
 
     def perform_create(self, serializer):
-        serializer.save(author_user=self.request.user, issue=Issue.objects.get(pk=self.kwargs['issue_pk']))
+        # Recupérer le 'id' du issue
+        issue = get_object_or_404(Issue, id=self.kwargs['issue_pk'])
+        
+        # lorsque l'utillisateur connécter céer un comment il en est automatiquement auther_user
+        serializer.save(
+            author_user=self.request.user,
+            issue=Issue.objects.get(pk=self.kwargs['issue_pk'])
+            )

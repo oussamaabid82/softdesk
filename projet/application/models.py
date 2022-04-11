@@ -14,7 +14,7 @@ class Project(models.Model):
     description = models.CharField(max_length=8000)
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     author_user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE,
         related_name='project_author', 
         null=True
