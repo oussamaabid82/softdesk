@@ -17,9 +17,9 @@ router :
 """
 
 router = routers.SimpleRouter()
-router.register(r'signup', SignupViewset, basename='signup')
-router.register(r'users', UserListViewset, basename='users')
 router.register(r'projects', ProjectViewSet, basename='projects'),
+router.register(r'signup', SignupViewset, basename='signup')
+router.register(r'userslist', UserListViewset, basename='userslist')
 
 """
 Nested router :
@@ -32,7 +32,7 @@ Nested router :
 
 projects_router = routers.NestedSimpleRouter(router, r'projects', lookup='project')
 projects_router.register(r'users', ContributorViewset, basename='project-users')
-projects_router.register(r'issues', IssueViewSet, basename='project_issues')
+projects_router.register(r'issues', IssueViewSet, basename='project-issues')
 
 """
 Nested router :

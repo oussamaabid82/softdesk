@@ -31,13 +31,13 @@ class IsAdminAuthenticated(BasePermission):
                 True
 
             # AUT have all access granted
-            if request.user.is_authenticated and user.permissions == 'AUT':
+            if request.user.is_authenticated and user.permissions == 'AUTHOR':
                 return True
 
             # COL have only GET and POST granted
             if (
                 request.user.is_authenticated
-                and user.permissions == 'COL'
+                and user.permissions == 'CONTRIBUTOR'
                 and request.method in granted_method
             ):
                 return True
@@ -62,7 +62,7 @@ class IsAdminAuthenticated(BasePermission):
                 True
 
             # AUT have all access granted
-            if request.user.is_authenticated and user.permissions == 'AUT':
+            if request.user.is_authenticated and user.permissions == 'AUTHOR':
                 return True
 
             # COL have only GET granted

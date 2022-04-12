@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer
 
 from .models import Project, Contributor, Issue, Comment
 from authentication.serializers import UserSerializer
@@ -8,31 +8,32 @@ class IssueListSerializer(ModelSerializer):
     class Meta:
         model = Issue
         fields = [
-            'ip',
+            'id',
             'titel',
             'description',
-            'project',
+            'tag',
+            'priority',
+            'status',
             'create_time'
             ]
 
 
 class IssueDetailSerializer(ModelSerializer):
-   
+
     class Meta:
         model = Issue
         fields = [
-            'ip',
+            'id',
             'author_user',
             'assignee_user',
             'titel',
             'description',
-            'project',
             'tag',
             'priority',
             'status',
             'create_time',
             ]
-        depth = 1
+        # depth = 1
 
 
 class ProjectListSerializer(ModelSerializer):
@@ -40,7 +41,7 @@ class ProjectListSerializer(ModelSerializer):
     class Meta:
         model = Project
         fields = [
-            'ip',
+            'id',
             'titel',
             'type',
             'description',
@@ -49,17 +50,17 @@ class ProjectListSerializer(ModelSerializer):
 
 
 class ProjectDetailSerializer(ModelSerializer):
-    issues = IssueListSerializer(many=True)
+    issues_project = IssueListSerializer(many=True)
         
     class Meta:
         model = Project
         fields = [
-            'ip',
+            'id',
             'author_user',
             'titel',
             'type',
             'description',
-            'issues',
+            'issues_project',
             'create_time'
             ]
         depth = 1
@@ -70,13 +71,13 @@ class CommentListSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = [
-            'ip',
-            'author_user',
+            'id',
             'description',
             'create_time'
             ]    
 
 class CommentDetailSerializer(ModelSerializer):
+    
     class Meta:
         model = Comment
         fields = [
@@ -93,8 +94,8 @@ class ContributorSerializer(ModelSerializer):
     class Meta:
         model = Contributor 
         fields = [
-            'ip',
-            'author_user'      
-            'permission',
+            'id',
+            'user',
+            'permissions',
             'role',
             ]

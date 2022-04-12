@@ -2,15 +2,22 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
 
-from .models import User
+from .models import Users
 
 
- 
 class UserSerializer(ModelSerializer):
     class Meta():
-        model = User
-        fields = ['pk','username','first_name', 'last_name', 'email', 'password']
-
+        model = Users
+        fields = [
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'password'
+            ]
+        # extra_kwargs = {'password': {'write_only': True, 'required':True}}
+    
     # encode password
     def validate_password(self, value: str) -> str:
         return make_password(value)
@@ -27,13 +34,12 @@ class UserSerializer(ModelSerializer):
 class UserListSerializer(ModelSerializer):
     
     class Meta():
-        model = User
+        model = Users
         fields = [
-            'pk', 
+            'id', 
             'username',
             'password',
             'first_name', 
             'last_name', 
             'email'
             ]
- 

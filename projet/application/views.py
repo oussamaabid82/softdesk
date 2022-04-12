@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
+
 from . models import Issue, Project, Comment, Contributor
 from . serializers import (
     IssueDetailSerializer, ProjectDetailSerializer, 
@@ -24,7 +25,7 @@ class MultipleSerializerMixin:
 class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
     serializer_class = ProjectListSerializer
     detail_serializer_class = ProjectDetailSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         queryset = Project.objects.all()
@@ -37,7 +38,7 @@ class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
         
         # Créer contributor en mettant l'utilisateur connecter comme auth_user
         Contributor.objects.create(
-            auth_user=self.request.user,
+            user=self.request.user,
             project=project,
             permissions='AUTHOR',
             role=''
@@ -73,9 +74,9 @@ class ContributorViewset(ModelViewSet):
     
     
 class IssueViewSet(ModelViewSet):
-    permission_classes = [IsAdminAuthenticated]
     serializer_class = IssueListSerializer
     detail_serializer_class = IssueDetailSerializer
+    permission_classes = [IsAdminAuthenticated]
     
     def get_queryset(self):
         return Issue.objects.filter(project_id=self.kwargs['project_pk'])
@@ -85,12 +86,8 @@ class IssueViewSet(ModelViewSet):
         project = get_object_or_404(Project, id=self.kwargs['project_pk'])
         
         # lorsque l'utillisateur connécter céer un issue il en est automatiquement auther_user et assignee  
-        serializer.save(
-            project=Project.objects.get(pk=self.kwargs['project_pk']), 
-            author_user=self.request.user,
-            assignee_user=self.request.user
-            )
-
+        serializer.save(project=project, author_user=self.request.user, assignee_user=self.request.user)
+        
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return self.detail_serializer_class

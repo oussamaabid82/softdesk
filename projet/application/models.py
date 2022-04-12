@@ -23,7 +23,7 @@ class Project(models.Model):
         settings.AUTH_USER_MODEL,
         through='Contributor',
         related_name='contributions'
-    )  
+    )
     create_time = models.DateTimeField(auto_now_add=True)
 
 
@@ -35,12 +35,12 @@ class Contributor(models.Model):
     ]
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='contributor_project', null=True)
-    author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contributor_user')
-    permission = models.CharField(max_length=50, choices=ROLES_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contributor')
+    permissions = models.CharField(max_length=50, choices=ROLES_CHOICES)
     role = models.CharField(max_length=100, choices=ROLES_CHOICES)
 
     class Meta:
-        unique_together = ('author_user', 'project')
+        unique_together = ('user', 'project')
 
 
 class Issue(models.Model):
