@@ -14,9 +14,9 @@ class Project(models.Model):
     description = models.CharField(max_length=8000)
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     author_user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='project_author', 
+        related_name='project_author',
         null=True
     )
     contributors = models.ManyToManyField(
@@ -28,16 +28,16 @@ class Project(models.Model):
 
 
 class Contributor(models.Model):
-    
+
     ROLES_CHOICES = [
         ("AUTHOR", "Auther"),
-        ("CONTRIBUTOR", "Contributor"),    
+        ("CONTRIBUTOR", "Contributor"),
     ]
-    
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='contributor_project', null=True)
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='contributor_project', null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='contributor')
     permissions = models.CharField(max_length=50, choices=ROLES_CHOICES)
-    role = models.CharField(max_length=100, choices=ROLES_CHOICES)
+    role = models.CharField(max_length=100)
 
     class Meta:
         unique_together = ('user', 'project')
@@ -49,11 +49,11 @@ class Issue(models.Model):
         ('moyen', 'MOYENNE'),
         ('elevee', 'ÉLEVÉE')
     ]
-    
+
     TAG_CHOICES = [
         ('bug', 'BUG'),
         ('amélioration', 'AMELIORATION'),
-        ('tâche', 'TACHE'),    
+        ('tâche', 'TACHE'),
     ]
 
     STATUS_CHOICES = [
@@ -69,10 +69,15 @@ class Issue(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='issues_project')
     status = models.CharField(max_length=500, choices=STATUS_CHOICES)
     author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='issue_author')
-    assignee_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='issue_assignee', null=True)
+    assignee_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='issue_assignee',
+        null=True
+    )
     create_time = models.DateTimeField(auto_now_add=True)
-    
-    
+
+
 class Comment(models.Model):
     description = models.CharField(max_length=8000)
     author_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -34,15 +34,14 @@
 	- Créer la migration des models dans la base des données en tapant dans votre terminal:
 		```bash
 		python manage.py migrate
-	```
+		```
 
 * ### Lancement du projet
 	- Démarrer le serveur en tapant dans votre terminal:
 		```bash
 		python manage.py runserver
 		```
-    - Ouvrez votre navigateur web et taper http://127.0.0.1:8000/signup dans la barre d'adresse pour pour créer un compte.
-	- taper http://127.0.0.1:8000/login dans la barre d'adresse pour vous connectez.
+    - Ouvrez votre navigateur web et taper http://127.0.0.1:8000/ dans la barre d'adresse pour accèder à l'API.
 
 ## N.B : POUR POUVOIR UTILISER CETTE API IL FAUT BIEN SE CONNECTER AVEC UN NOM D'UTILISATEUR ET UN MOT DE PASSE
 
