@@ -23,10 +23,9 @@ class MultipleSerializerMixin:
 
 
 class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
-
+    permission_classes = [IsAuthenticated]
     serializer_class = ProjectListSerializer
     detail_serializer_class = ProjectDetailSerializer
-    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Project.objects.all()
@@ -52,9 +51,9 @@ class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
 
 
 class ContributorViewset(ModelViewSet):
+    permission_classes = [IsAdminAuthenticated]
 
     serializer_class = ContributorSerializer
-    permission_classes = [IsAdminAuthenticated]
 
     def get_queryset(self):
         # Vérifier si l'utilisateur est contributor ou non
@@ -75,10 +74,9 @@ class ContributorViewset(ModelViewSet):
 
 
 class IssueViewSet(ModelViewSet):
-
+    permission_classes = [IsAdminAuthenticated]
     serializer_class = IssueListSerializer
     detail_serializer_class = IssueDetailSerializer
-    permission_classes = [IsAdminAuthenticated]
 
     def get_queryset(self):
         return Issue.objects.filter(project_id=self.kwargs['project_pk'])
@@ -97,10 +95,9 @@ class IssueViewSet(ModelViewSet):
 
 
 class CommentViewSet(ModelViewSet):
-
+    permission_classes = [IsAdminAuthenticated]
     serializer_class = CommentListSerializer
     detail_serializer_class = CommentDetailSerializer
-    permission_classes = [IsAdminAuthenticated]
 
     def get_queryset(self):
         return Comment.objects.filter(issue_id=self.kwargs['issue_pk'])

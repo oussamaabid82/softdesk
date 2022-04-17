@@ -30,8 +30,8 @@ class Project(models.Model):
 class Contributor(models.Model):
 
     ROLES_CHOICES = [
-        ("AUTHOR", "Auther"),
-        ("CONTRIBUTOR", "Contributor"),
+        ("AUTHOR", "auther"),
+        ("CONTRIBUTOR", "contrib"),
     ]
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='contributor_project', null=True)
