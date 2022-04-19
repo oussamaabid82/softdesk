@@ -15,7 +15,7 @@ class IsAdminAuthenticated(BasePermission):
             user = Contributor.objects.get(
                 Q(project_id=view.kwargs['project_pk']) & Q(user=request.user)
             )
-
+            
             # SuperUser a tous les accès accordés
             if request.user.is_authenticated and request.user.is_superuser:
                 return True
@@ -24,10 +24,12 @@ class IsAdminAuthenticated(BasePermission):
             if request.user.is_authenticated and user.permissions == 'AUTHOR':
                 return True
 
+            # l'utilisateur connecté peux modifier ce qui a créeé
+            if user.user == request.user:
+                    return True
+            
             # CONTRIBUTOR a seulement accés à GET et POST
-            if (
-                request.user.is_authenticated and user.permissions == 'CONTRIBUTOR' and request.method in granted_method
-            ):
+            if request.user.is_authenticated and user.permissions == 'CONTRIBUTOR' and request.method in granted_method:
                 return True
 
         except Contributor.DoesNotExist:
@@ -42,16 +44,21 @@ class IsAdminAuthenticated(BasePermission):
             user = Contributor.objects.get(
                 Q(project_id=view.kwargs['project_pk']) & Q(user=request.user)
             )
-            print(user)
+            print(user.__doc__)
+            print(request.method)
+            print(user.permissions)
+            print(user.user)
+            print(request.user)
+            
             if request.user.is_authenticated:
                 if request.user.is_superuser:
-                    True
+                    return True
 
                 if user.permissions == 'AUTHOR':
                     return True
 
                 granted_method = ('GET')
-
+        
                 if user.permissions == 'CONTRIBUTOR' and request.method in granted_method:
                     return True
 

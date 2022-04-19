@@ -9,11 +9,12 @@ class IssueListSerializer(ModelSerializer):
         model = Issue
         fields = [
             'id',
-            'titel',
+            'title',
             'description',
             'tag',
             'priority',
             'status',
+            'assignee_user',
             'create_time'
         ]
 
@@ -26,11 +27,12 @@ class IssueDetailSerializer(ModelSerializer):
             'id',
             'author_user',
             'assignee_user',
-            'titel',
+            'title',
             'description',
             'tag',
             'priority',
             'status',
+            'assignee_user',
             'create_time',
         ]
         # depth = 1
@@ -42,7 +44,7 @@ class ProjectListSerializer(ModelSerializer):
         model = Project
         fields = [
             'id',
-            'titel',
+            'title',
             'type',
             'description',
             'create_time'
@@ -58,7 +60,7 @@ class ProjectDetailSerializer(ModelSerializer):
             'id',
             'author_user',
             'contributors',
-            'titel',
+            'title',
             'type',
             'description',
             'issues_project',

@@ -10,7 +10,7 @@ class Project(models.Model):
         ('android', 'ANDROID')
     ]
 
-    titel = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     description = models.CharField(max_length=8000)
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     author_user = models.ForeignKey(
@@ -62,7 +62,7 @@ class Issue(models.Model):
         ('terminé', 'TERMINE'),
     ]
 
-    titel = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     description = models.CharField(max_length=8000)
     tag = models.CharField(max_length=100, choices=TAG_CHOICES)
     priority = models.CharField(max_length=100, choices=PRIORITY_CHOICES)
