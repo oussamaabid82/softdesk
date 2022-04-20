@@ -9,7 +9,7 @@ from . serializers import (
     IssueListSerializer, CommentListSerializer, CommentDetailSerializer,
     ContributorSerializer, ProjectListSerializer
 )
-from .permissions import IsAdminAuthenticated
+from .permissions import IsAdminAuthenticated, IsContributor
 
 
 class MultipleSerializerMixin:
@@ -23,7 +23,7 @@ class MultipleSerializerMixin:
 
 
 class ProjectViewSet(MultipleSerializerMixin, ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsContributor]
     serializer_class = ProjectListSerializer
     detail_serializer_class = ProjectDetailSerializer
 
