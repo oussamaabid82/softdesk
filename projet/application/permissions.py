@@ -7,22 +7,34 @@ class IsContributor(BasePermission):
 
     def has_permission(self, request, view):
 
-        granted_method = ('GET')
+        try:
+
+            if request.user.is_authenticated:
+                return True
+
+        except Exception:
+            print('pas de données correspondantes')
+
+    def has_object_permission(self, request, view, obj):
 
         try:
-            # SuperUser a tous les accès accordés
+            if request.user == obj.author_user:
+                return True
+
+            user = Contributor.objects.get(
+                Q(project_id=view.kwargs['pk']) & Q(user=request.user)
+            )
+
             if request.user.is_authenticated and request.user.is_superuser:
                 return True
 
-            # L'utilisateur connecté doit être dans la base de données des contributeurs pour le projet sélectionné
-            user = Contributor.objects.get(user=request.user)
-
-            # AUTHOR a tous les accès accordés
-            if request.user.is_authenticated and user.permissions == 'AUTHOR':
+            if user.permissions == 'AUTHOR':
                 return True
 
-            # CONTRIBUTOR a seulement accés à GET
-            return bool(request.user and request.user.is_authenticated and user.permissions == 'CONTRIBUTOR' and request.method in granted_method)
+            granted_method = ('GET')
+
+            if request.user.is_authenticated and user.permissions == 'CONTRIBUTOR' and request.method in granted_method:
+                return True
 
         except Exception:
             print('pas de données correspondantes')
